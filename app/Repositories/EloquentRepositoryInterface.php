@@ -19,7 +19,7 @@ interface EloquentRepositoryInterface
 
     public function paginate(array $data): Collection;
 
-    public function firstWhere($column, $value): Model;
+    public function firstWhere($column, $value): ?Model;
 
-    public function whereNotIn($column, array $array): Model;
+    public function whereNotIn($column, array $array): ?Model;
 }

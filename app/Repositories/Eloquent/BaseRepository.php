@@ -55,12 +55,12 @@ class BaseRepository implements EloquentRepositoryInterface
         return $this->model->paginate($data['per_page']);
     }
 
-    public function firstWhere($column, $value): Model
+    public function firstWhere($column, $value): ?Model
     {
         return $this->model->firstWhere($column, $value);
     }
 
-    public function whereNotIn($column, array $array): Model
+    public function whereNotIn($column, array $array): ?Model
     {
         return $this->model->whereNotIn($column, $array)->get();
     }
