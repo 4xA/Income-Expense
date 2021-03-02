@@ -3,26 +3,30 @@
 namespace App\Http\Controllers;
 
 use App\Income;
+use App\Services\BalanceEntryService;
+use Exception;
 use Illuminate\Http\Request;
 
 class IncomeController extends Controller
 {
+    /**
+     * Service layer for BalanceEntry
+     * 
+     * @var \App\Services\BalanceEntryService
+     */
+    protected $balanceEntryService;
+
+    public function __construct(BalanceEntryService $balanceEntryService)
+    {
+        $this->balanceEntryService = $balanceEntryService;
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
     {
         //
     }
@@ -35,7 +39,18 @@ class IncomeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $result = ['status' => '201'];
+
+        try {
+            $result['data'] = $this->balanceEntryService->saveIncome($request->all());
+        } catch (Exception $e) {
+            $result = [
+                'status' => 500,
+                'error' => $e->getMessage()
+            ];
+        }
+
+        return response()->json($result, $result['status']);
     }
 
     /**

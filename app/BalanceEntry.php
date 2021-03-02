@@ -12,6 +12,7 @@ class BalanceEntry extends Model
 
     protected $childTypes = [
         'income' => Income::class,
+        'expense' => Expense::class,
     ];
 
     /**
