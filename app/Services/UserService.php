@@ -26,7 +26,7 @@ class UserService
     {
         $validator = Validator::make($data, [
             'name' => 'required|string',
-            'email' => 'required|email:rfc,dns',
+            'email' => 'required|email:rfc,dns|unique:users',
             'password' => 'required|string|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
         ]);
 
