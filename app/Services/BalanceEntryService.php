@@ -42,6 +42,8 @@ class BalanceEntryService
             throw new InvalidArgumentException($validator->errors()->first());
         }
 
+        $data['user_id'] = auth()->user()->id;
+
         return $this->incomeRepository->createOrUpdate($data);
     }
 }

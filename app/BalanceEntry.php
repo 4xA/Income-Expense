@@ -28,7 +28,7 @@ class BalanceEntry extends Model
      * @var array
      */
     protected $fillable = [
-        'balance', 'type', 'title', 'description'
+        'user_id', 'balance', 'type', 'title', 'description'
     ];
 
     /**
