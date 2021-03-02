@@ -19,10 +19,12 @@ class UserService
 
     /**
      * Save or update a user
+     * 
      * @param array $data data to fill a user
-     * @return User created/updated user
+     * 
+     * @return \App\User created/updated user
      */
-    public function saveUserData(array $data)
+    public function saveUserData(array $data): \App\User
     {
         $validator = Validator::make($data, [
             'name' => 'required|string',
@@ -38,5 +40,32 @@ class UserService
         $data['api_token'] = Str::random(80);
 
         return $this->userRepository->createOrUpdate($data);
+    }
+
+    /**
+     * Get API token for user using password and email
+     * 
+     * @param array $data data to look in
+     * 
+     * @return array data to be returned
+     */
+    public function getApiToken(array $data): string
+    {
+        $validator = Validator::make($data, [
+            'email' => 'required',
+            'password' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            throw new InvalidArgumentException($validator->errors()->first());
+        }
+
+        $user = $this->userRepository->firstWhere('email', $data['email']);
+
+        if (is_null($user) || !Hash::check($data['password'], $user->password)) {
+            throw new InvalidArgumentException('wrong email or password');
+        }
+
+       return $user->api_token;
     }
 }
