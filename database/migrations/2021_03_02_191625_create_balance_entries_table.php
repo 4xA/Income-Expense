@@ -15,7 +15,7 @@ class CreateBalanceEntriesTable extends Migration
     {
         Schema::create('balance_entries', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('balance');
+            $table->unsignedDecimal('balance', 10, 3);
             $table->enum('type', [
                 'income',
                 'expense'
