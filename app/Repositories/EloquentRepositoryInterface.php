@@ -17,7 +17,7 @@ interface EloquentRepositoryInterface
 
     public function delete($id): bool;
 
-    public function paginate(array $data): Collection;
+    public function paginate(array $data);
 
     public function firstWhere($column, $value): ?Model;
 

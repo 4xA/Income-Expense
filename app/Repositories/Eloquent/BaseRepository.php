@@ -15,7 +15,7 @@ class BaseRepository implements EloquentRepositoryInterface
         $this->model = $model;
     }
 
-    public function createOrUpdate(array $data): Model
+    public function createOrUpdate(array $data, $id = null): Model
     {
         $model = new $this->model;
 
@@ -47,10 +47,16 @@ class BaseRepository implements EloquentRepositoryInterface
 
     public function delete($id): bool
     {
-        return $this->getById($id)->delete();
+        $model = $this->getById($id);
+
+        if (is_null($model)) {
+            return false;
+        }
+
+        return $model->delete();
     }
 
-    public function paginate($data): Collection
+    public function paginate($data)
     {
         return $this->model->paginate($data['per_page']);
     }

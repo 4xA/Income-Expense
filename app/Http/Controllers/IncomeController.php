@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Income;
 use App\Services\BalanceEntryService;
 use Exception;
 use Illuminate\Http\Request;
@@ -26,9 +25,23 @@ class IncomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $data = $request->only(['per_page']);
+
+        $result = ['status' => 200];
+
+        try {
+            $result = $this->balanceEntryService->getPaginated($data);
+            $result['status'] = 200;
+        } catch (Exception $e) {
+            $result = [
+                'status' => 500,
+                'error' => $e->getMessage()
+            ];
+        }
+
+        return response()->json($result, $result['status']);
     }
 
     /**
@@ -59,20 +72,20 @@ class IncomeController extends Controller
      * @param  \App\Income  $income
      * @return \Illuminate\Http\Response
      */
-    public function show(Income $income)
+    public function show(int $id)
     {
-        //
-    }
+        $result = ['status' => '200'];
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Income  $income
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Income $income)
-    {
-        //
+        try {
+            $result['data'] = $this->balanceEntryService->getIncomeById($id);
+        } catch (Exception $e) {
+            $result = [
+                'status' => 500,
+                'error' => $e->getMessage()
+            ];
+        }
+
+        return response()->json($result, $result['status']);
     }
 
     /**
@@ -82,9 +95,20 @@ class IncomeController extends Controller
      * @param  \App\Income  $income
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Income $income)
+    public function update(Request $request, int $id)
     {
-        //
+        $result = ['status' => '200'];
+
+        try {
+            $result['data'] = $this->balanceEntryService->updateIncomeById($request->all(), $id);
+        } catch (Exception $e) {
+            $result = [
+                'status' => 500,
+                'error' => $e->getMessage()
+            ];
+        }
+
+        return response()->json($result, $result['status']);
     }
 
     /**
@@ -93,8 +117,24 @@ class IncomeController extends Controller
      * @param  \App\Income  $income
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Income $income)
+    public function destroy(int $id)
     {
-        //
+        $result = ['status' => '204'];
+
+        try {
+            if (!$this->balanceEntryService->deleteIncomeById($id)) {
+                $result = [
+                    'status' => 404,
+                    'error' => 'resource not found'
+                ];
+            }
+        } catch (Exception $e) {
+            $result = [
+                'status' => 500,
+                'error' => $e->getMessage()
+            ];
+        }
+
+        return response()->json($result, $result['status']);       
     }
 }
