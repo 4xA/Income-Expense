@@ -32,7 +32,7 @@ class IncomeController extends Controller
         $result = ['status' => 200];
 
         try {
-            $result = $this->balanceEntryService->getPaginated($data);
+            $result = $this->balanceEntryService->getPaginatedIncome($data);
             $result['status'] = 200;
         } catch (Exception $e) {
             $result = [

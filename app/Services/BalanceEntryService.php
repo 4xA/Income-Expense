@@ -100,7 +100,12 @@ class BalanceEntryService
         return $this->incomeRepository->delete($id);
     }
 
-    public function getPaginated(array $data)
+    /**
+     * Paginated income
+     * 
+     * @param array $data filters for pagination
+     */
+    public function getPaginatedIncome(array $data)
     {
         $validator = Validator::make($data, [
             'per_page' => 'integer|nullable'
