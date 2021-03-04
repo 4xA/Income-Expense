@@ -15,12 +15,16 @@ class BaseRepository implements EloquentRepositoryInterface
         $this->model = $model;
     }
 
-    public function createOrUpdate(array $data, $id = null): Model
+    public function createOrUpdate(array $data, $id = null): ?Model
     {
         $model = new $this->model;
 
         if (isset($id)) {
             $model = $this->getById($id);
+        }
+
+        if (is_null($model)) {
+            return null;
         }
 
         $model->fill($data);

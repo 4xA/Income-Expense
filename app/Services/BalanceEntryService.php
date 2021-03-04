@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\Expense;
 use App\Income;
-use App\Repositories\Eloquent\IncomeRepository;
+use App\Repositories\ExpenseRepositoryInterface;
+use App\Repositories\IncomeRepositoryInterface;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Validator;
 use InvalidArgumentException;
@@ -13,19 +15,29 @@ class BalanceEntryService
     /**
      * BalanceEntry repository
      * 
-     * @var \App\Repositories\Eloquent\BalanceEntryRepository
+     * @var \App\Repositories\Eloquent\IncomeRepository
      */
     protected $incomeRepository;
 
-    public function __construct(IncomeRepository $incomeRepository)
+    /**
+     * BalanceEntry repository
+     * 
+     * @var \App\Repositories\Eloquent\ExpenseRepository
+     */
+    protected $expenseRepository;
+
+    public function __construct(IncomeRepositoryInterface $incomeRepository, ExpenseRepositoryInterface $expenseRepository)
     {
         $this->incomeRepository = $incomeRepository;
+        $this->expenseRepository = $expenseRepository;
     }
 
     /**
      * Save a new income entry
      * 
      * @throws InvalidArgumentExcpetion if data is not valid
+     * 
+     * @throws AuthenticationExcpetion if user is not logged in
      * 
      * @param array $data data to fill a user
      * 
@@ -43,13 +55,7 @@ class BalanceEntryService
             throw new InvalidArgumentException($validator->errors()->first());
         }
 
-        $user = auth()->user();
-
-        if (is_null($user)) {
-            throw new AuthenticationException('authentication exception');
-        }
-
-        $data['user_id'] = $user->id;
+        $data['user_id'] = $this->getUserId();
 
         return $this->incomeRepository->createOrUpdate($data);
     }
@@ -127,5 +133,119 @@ class BalanceEntryService
         $result = $this->incomeRepository->paginate($data);
 
         return $result;
+    }
+
+    /**
+     * Save a new expense entry
+     * 
+     * @throws InvalidArgumentExcpetion if data is not valid
+     * 
+     * @throws AuthenticationExcpetion if user is not logged in
+     * 
+     * @param array $data data to fill a user
+     * 
+     * @return \App\Expense
+     */
+    public function saveExpense(array $data): Expense
+    {
+        $validator = Validator::make($data, [
+            'balance' => 'required|numeric|min:0|max:9999999.999',
+            'title' => 'nullable|string',
+            'description' => 'nullable|string'
+        ]);
+
+        if ($validator->fails()) {
+            throw new InvalidArgumentException($validator->errors()->first());
+        }
+
+        $data['user_id'] = $this->getUserId();
+
+        return $this->expenseRepository->createOrUpdate($data);
+    }
+
+    /**
+     * Retrieve expense by id
+     * 
+     * @param int $id id of income
+     * 
+     * @return ?\App\Expense
+     */
+    public function getExpenseById(int $id): ?Expense
+    {
+        return $this->expenseRepository->getById($id);
+    }
+
+    /**
+     * Update expense by id
+     * 
+     * @param array $data data to update expense
+     * 
+     * @param int $id id of expense
+     * 
+     * @return ?\App\Expense
+     */
+    public function updateExpenseById(array $data, int $id): ?Expense
+    {
+        $data['id'] = $id;
+
+        $validator = Validator::make($data, [
+            'id' => 'required|exists:balance_entries',
+            'balance' => 'nullable|numeric|min:0|max:9999999.999',
+            'title' => 'nullable|string',
+            'description' => 'nullable|string'
+        ]);       
+
+        if ($validator->fails()) {
+            throw new InvalidArgumentException($validator->errors()->first());
+        }
+
+        $data['user_id'] = $this->getUserId();
+
+        return $this->expenseRepository->createOrUpdate($data, $id);
+    }
+
+    /**
+     * Delete expense by id
+     * 
+     * @param int $id id of resource
+     * 
+     * @return bool is resource deleted or not found
+     */
+    public function deleteExpenseById(int $id): bool
+    {
+        return $this->expenseRepository->delete($id);
+    }
+
+    /**
+     * Paginated expense
+     * 
+     * @param array $data filters for pagination
+     */
+    public function getPaginatedExpense(array $data)
+    {
+        $validator = Validator::make($data, [
+            'per_page' => 'integer|nullable'
+        ]);
+
+        if ($validator->fails()) {
+            throw new InvalidArgumentException($validator->errors()->first());
+        }
+
+        $data['per_page'] = array_key_exists('per_page', $data) && !is_null($data['per_page']) ? $data['per_page'] : 10;
+
+        $result = $this->expenseRepository->paginate($data);
+
+        return $result;
+    }
+
+    private function getUserId(): int
+    {
+        $user = auth()->user();;
+
+        if (is_null($user)) {
+            throw new AuthenticationException('authentication exception');
+        }
+
+        return $user->id; 
     }
 }

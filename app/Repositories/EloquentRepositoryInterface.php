@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 interface EloquentRepositoryInterface
 {
-    public function createOrUpdate(array $data): Model;
+    public function createOrUpdate(array $data): ?Model;
 
     public function fill(array $data): Model;
 

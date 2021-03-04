@@ -77,7 +77,13 @@ class IncomeController extends Controller
         $result = ['status' => '200'];
 
         try {
-            $result['data'] = $this->balanceEntryService->getIncomeById($id);
+            $data = $this->balanceEntryService->getIncomeById($id);
+
+            if (is_null($data)) {
+                $result['status'] = '404';
+            }
+
+            $result['data'] = $data;
         } catch (Exception $e) {
             $result = [
                 'status' => 500,
@@ -100,7 +106,13 @@ class IncomeController extends Controller
         $result = ['status' => '200'];
 
         try {
-            $result['data'] = $this->balanceEntryService->updateIncomeById($request->all(), $id);
+            $data = $this->balanceEntryService->updateIncomeById($request->all(), $id);
+
+            if (is_null($data)) {
+                $result['status'] = '404';
+            }
+
+            $result['data'] = $data;
         } catch (Exception $e) {
             $result = [
                 'status' => 500,
@@ -135,6 +147,6 @@ class IncomeController extends Controller
             ];
         }
 
-        return response()->json($result, $result['status']);       
+        return response()->json($result, $result['status']);
     }
 }

@@ -18,5 +18,6 @@ Route::get('login', 'AuthController@login');
 Route::apiResource('users', 'UserController');
 
 Route::middleware('auth:api')->group(function () {
-    Route::apiResource('income', 'IncomeController');
+    Route::apiResource('incomes', 'IncomeController');
+    Route::apiResource('expenses', 'ExpenseController');
 });
