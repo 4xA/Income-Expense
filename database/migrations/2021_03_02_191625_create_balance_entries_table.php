@@ -15,13 +15,15 @@ class CreateBalanceEntriesTable extends Migration
     {
         Schema::create('balance_entries', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->unsignedDecimal('balance', 10, 3);
             $table->enum('type', [
                 'income',
                 'expense'
             ]);
             $table->string('title')->nullable();
-            $table->string('description')->nullable();
+            $table->text('description')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
