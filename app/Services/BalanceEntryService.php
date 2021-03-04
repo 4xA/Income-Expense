@@ -238,6 +238,30 @@ class BalanceEntryService
         return $result;
     }
 
+    /**
+     * Calcualte balance
+     * 
+     * @return float balance
+     */
+    public function calculateBalance(): float
+    {
+        $balance = 0.0;
+
+        $this->incomeRepository->chunk(100, function ($incomes) use (&$balance) {
+            foreach ($incomes as $income) {
+                $balance += $income->balance;
+            }
+        });
+
+        $this->expenseRepository->chunk(100, function ($expenses) use (&$balance) {
+            foreach ($expenses as $expense) {
+                $balance -= $expense->balance;
+            }
+        });
+
+        return round($balance, 3);
+    }
+
     private function getUserId(): int
     {
         $user = auth()->user();;

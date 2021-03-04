@@ -20,4 +20,5 @@ Route::apiResource('users', 'UserController');
 Route::middleware('auth:api')->group(function () {
     Route::apiResource('incomes', 'IncomeController');
     Route::apiResource('expenses', 'ExpenseController');
+    Route::get('calculateBalance', 'BalanceController');
 });

@@ -3,6 +3,7 @@
 namespace App\Repositories\Eloquent;
 
 use App\Repositories\EloquentRepositoryInterface;
+use Closure;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
@@ -42,6 +43,11 @@ class BaseRepository implements EloquentRepositoryInterface
     public function getAll(): Collection
     {
         return $this->model->get();
+    }
+
+    public function chunk(int $size, Closure $callback): void
+    {
+        $this->model->chunk($size, $callback);
     }
 
     public function getById($id): ?Model
