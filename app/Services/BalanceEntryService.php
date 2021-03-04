@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Income;
 use App\Repositories\Eloquent\IncomeRepository;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Validator;
 use InvalidArgumentException;
 
@@ -42,7 +43,13 @@ class BalanceEntryService
             throw new InvalidArgumentException($validator->errors()->first());
         }
 
-        $data['user_id'] = auth()->user()->id;
+        $user = auth()->user();
+
+        if (is_null($user)) {
+            throw new AuthenticationException('authentication exception');
+        }
+
+        $data['user_id'] = $user->id;
 
         return $this->incomeRepository->createOrUpdate($data);
     }

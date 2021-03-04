@@ -1,14 +1,21 @@
 <?php
 
-use App\Repositories\Eloquent\UserRepository;
 use App\Services\UserService;
-use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class AuthTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected $userService;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->userService = $this->app->make(UserService::class);
+    }
 
     /**
      * Login test
@@ -17,15 +24,13 @@ class AuthTest extends TestCase
      */
     public function test_login(): void
     {
-        $userService = new UserService(new UserRepository(new User()));
-
-        $user = $userService->saveUserData([
+        $user = $this->userService->saveUserData([
             'name' => 'John Doe',
             'email' => 'asa0abbad+test@gmail.com',
             'password' => 'Password1234'
         ]);
 
-        $apiToken = $userService->getApiToken([
+        $apiToken = $this->userService->getApiToken([
             'email' => 'asa0abbad+test@gmail.com',
             'password' => 'Password1234'
         ]);
@@ -34,12 +39,12 @@ class AuthTest extends TestCase
 
         $this->expectException(InvalidArgumentException::class);
 
-        $apiToken = $userService->getApiToken([
+        $apiToken = $this->userService->getApiToken([
             'email' => 'asa0abbad+test@gmail.com',
             'password' => 'wrongpassword'
         ]);
 
-        $apiToken = $userService->getApiToken([
+        $apiToken = $this->userService->getApiToken([
             'password' => 'wrongpassword'
         ]);
     }
