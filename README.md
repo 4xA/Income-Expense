@@ -21,3 +21,4 @@ Laravel is accessible, powerful, and provides tools required for large, robust a
 2. I did not implement `content negotiation`; i.e. I did not implement supporting multiple request types like (json, xml, png) but only support application/json.
 3. I merged the registration endpoint with the create method for users for simplification
 4. I did not implement route caching but typically we would add a layer that will cache results for x seconds
+5. I did not implement API versioning
