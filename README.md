@@ -13,8 +13,6 @@
     }
 ```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
 ## Assumptions
 
 1. I used basic api authentication that comes bundled with the Laravel framework with plaintext api tokens and I did not use a package like `Passport` in order to simplify application development since this is not production level
