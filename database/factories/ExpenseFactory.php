@@ -8,7 +8,7 @@ use Faker\Generator as Faker;
 $factory->define(Expense::class, function (Faker $faker) {
     return [
         'user_id' => 1,
-        'balance' => $faker->randomFloat(3, 0, 9999999.999),
+        'balance' => $faker->randomFloat(3, 0, 100.999),
         'title' => $faker->word(),
         'description' => $faker->text
     ];
