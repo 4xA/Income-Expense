@@ -1,10 +1,10 @@
 ## Installation instructions
 
-- Copy .env.example and input your env configuration.
+- Copy .env.example and input your env configuration
 - Run `composer install`
-- Run `php artisan migrate`.
+- Run `php artisan migrate`
 - Run `php artisan db:seed`
-- Always add header `Accept:application/json`.
+- Always add header `Accept:application/json`
 - Login at route `api/login` with the following application/json body:
 ```
     {
@@ -12,6 +12,7 @@
         "password": "Password1234"
     }
 ```
+- Authentication routes use api_token passed into bearer token
 
 ## Assumptions
 
