@@ -16,7 +16,7 @@ class UserSeeder extends Seeder
     {
         DB::table('users')->insert([
             'name' => 'admin',
-            'email' => 'admin@classera.com',
+            'email' => 'admin@balanceentries.com',
             'password' => Hash::make('Password1234'),
             'api_token' => Str::random(80)
         ]);

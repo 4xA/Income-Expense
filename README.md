@@ -8,7 +8,7 @@
 - Login at route `api/login` with the following application/json body:
 ```
     {
-        "email": "admin@classera.com",
+        "email": "admin@balanceentries.com",
         "password": "Password1234"
     }
 ```
