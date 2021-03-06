@@ -6,12 +6,14 @@ use App\Expense;
 use App\Income;
 use App\Repositories\ExpenseRepositoryInterface;
 use App\Repositories\IncomeRepositoryInterface;
-use Illuminate\Auth\AuthenticationException;
+use App\Traits\UserQueriable;
 use Illuminate\Support\Facades\Validator;
 use InvalidArgumentException;
 
 class BalanceEntryService
 {
+    use UserQueriable;
+
     /**
      * BalanceEntry repository
      * 
@@ -260,16 +262,5 @@ class BalanceEntryService
         });
 
         return round($balance, 3);
-    }
-
-    private function getUserId(): int
-    {
-        $user = auth()->user();;
-
-        if (is_null($user)) {
-            throw new AuthenticationException('authentication exception');
-        }
-
-        return $user->id; 
     }
 }

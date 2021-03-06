@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Repositories\BalanceRepositoryInterface;
+use App\Repositories\Eloquent\BalanceRepository;
 use App\Repositories\Eloquent\ExpenseRepository;
 use App\Repositories\Eloquent\IncomeRepository;
 use App\Repositories\Eloquent\UserRepository;
@@ -22,6 +24,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(IncomeRepositoryInterface::class, IncomeRepository::class);
         $this->app->bind(ExpenseRepositoryInterface::class, ExpenseRepository::class);
+        $this->app->bind(BalanceRepositoryInterface::class, BalanceRepository::class);
     }
 
     /**

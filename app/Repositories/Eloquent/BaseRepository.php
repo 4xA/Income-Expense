@@ -76,6 +76,14 @@ class BaseRepository implements EloquentRepositoryInterface
         return $this->model->firstWhere($column, $value);
     }
 
+    public function lastWhere($column, $value): ?Model
+    {
+        return $this->model
+            ->where($column, $value)
+            ->orderByDesc($this->model->getKeyName())
+            ->first();
+    }
+
     public function whereNotIn($column, array $array): ?Model
     {
         return $this->model->whereNotIn($column, $array)->get();
